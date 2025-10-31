@@ -1,0 +1,7 @@
+.nix
+.win32
+.win64
+.emcc
+*.swp
+nerves_of_steel
+nerves_of_steel.exe
