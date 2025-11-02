@@ -73,6 +73,7 @@ COMMON_OBJS := \
 	src/Player.o \
 	src/Pot.o \
 	src/Segment.o \
+        src/SoundCache.o \
 	src/TextureCache.o \
 	src/Voc.o \
 	src/main.o
