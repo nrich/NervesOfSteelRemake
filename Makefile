@@ -74,6 +74,7 @@ COMMON_OBJS := \
 	src/Pot.o \
 	src/Segment.o \
 	src/TextureCache.o \
+	src/Voc.o \
 	src/main.o
 
 ifdef CONFIG_W64
