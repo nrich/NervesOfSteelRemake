@@ -50,8 +50,6 @@ void Pot::load(std::ifstream &fh, const Palette &palette) {
     fh.read((char *)&decompressed_size, sizeof(decompressed_size));
     fh.read((char *)&check, sizeof(check));
 
-    std::cerr << std::format("{:#08x}", check) << "\n";
-
     // POT\x00
     if (magic != 0x00544F50)
         throw std::domain_error("Incorrect magic value " + std::format("{:#08x}", magic));
