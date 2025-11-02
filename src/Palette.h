@@ -27,11 +27,15 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <raylib-cpp.hpp>
 
+#define PALETTE_BUFFER_LEN  768
+
 class Palette {
     std::array<raylib::Color, 256> colours;
+    void load(const std::array<uint8_t, PALETTE_BUFFER_LEN> &data);
+    void read(std::ifstream &fh);
 public:
     Palette(const std::string &filename);
-    Palette(const std::array<uint8_t, 768> &data);
+    Palette(const std::array<uint8_t, PALETTE_BUFFER_LEN> &data);
     Palette(std::ifstream &fh);
 
     const raylib::Color operator[](const int index) const {

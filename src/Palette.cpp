@@ -26,48 +26,26 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 Palette::Palette(const std::string &filename) {
     std::filesystem::path filepath = filename;
 
-    if (std::filesystem::file_size(filepath) != 768) {
+    if (std::filesystem::file_size(filepath) != PALETTE_BUFFER_LEN)
         throw std::invalid_argument(filename + " does not look like a VGA palette file"); 
-    }
 
     std::ifstream fh(filename, std::ios::binary|std::ios::in);
 
-    for (size_t i = 0; i < 256; i += 1) {
-        uint8_t r, g, b, a;
+    if (!fh.is_open())
+        throw std::runtime_error("Could not open file " + filename);
 
-        fh.read((char *)&r, 1);
-        fh.read((char *)&g, 1);
-        fh.read((char *)&b, 1);
-
-        if (i == 0) {
-            a = 0x00;
-        } else {
-            a = 0xFF;
-        }
-
-        colours[i] = raylib::Color((r * 255) / 63, (g * 255) / 63, (b * 255) / 63, a);
-    }
+    read(fh);
 }
 
 Palette::Palette(std::ifstream &fh) {
-    for (size_t i = 0; i < 256; i += 1) {
-        uint8_t r, g, b, a;
-
-        fh.read((char *)&r, 1);
-        fh.read((char *)&g, 1);
-        fh.read((char *)&b, 1);
-
-        if (i == 0) {
-            a = 0x00;
-        } else {
-            a = 0xFF;
-        }
-
-        colours[i] = raylib::Color((r * 255) / 63, (g * 255) / 63, (b * 255) / 63, a);
-    }
+    read(fh);
 }
 
-Palette::Palette(const std::array<uint8_t, 768> &data) {
+Palette::Palette(const std::array<uint8_t, PALETTE_BUFFER_LEN> &data) {
+    load(data);
+}
+
+void Palette::load(const std::array<uint8_t, PALETTE_BUFFER_LEN> &data) {
     for (size_t i = 0, c = 0; i < 256; i += 1, c += 3) {
         uint8_t r, g, b, a;
 
@@ -83,6 +61,17 @@ Palette::Palette(const std::array<uint8_t, 768> &data) {
 
         colours[i] = raylib::Color((r * 255) / 63, (g * 255) / 63, (b * 255) / 63, a);
     }
+}
+
+void Palette::read(std::ifstream &fh) {
+    std::array<uint8_t, PALETTE_BUFFER_LEN> data;
+
+    fh.read((char *)&data, data.size());
+
+    if (data.size() < PALETTE_BUFFER_LEN)
+        throw std::runtime_error("Short palette buffer read: " + std::to_string(data.size()));
+
+    load(data);
 }
 
 Palette::~Palette() {
