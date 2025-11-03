@@ -39,6 +39,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "Player.h"
 #include "TextureCache.h"
 #include "Map.h"
+#include "LaunchOptions.h"
 
 static const char *fragment_shader = R"(
 #version 330
@@ -225,15 +226,23 @@ static void draw_title_screen(Player *player, raylib::Window *window, const int 
 int main(int argc, char *argv[]) {
     cmdline::parser argparser;
     argparser.add<std::string>("datadir", 'd', "Data directory", false, "");
-    argparser.add<int>("scale", 's', "render scale", false, 2);
+    argparser.add<int>("scale", 's', "render scale", false, 0);
+    argparser.add<bool>("playback", 'p', "Disable music playback", false, false);
     argparser.parse_check(argc, argv);
 
     SetTraceLogLevel(LOG_WARNING);
 
     int scale = argparser.get<int>("scale");
+    bool disable_music_playback = argparser.get<bool>("playback");
     std::string datadir = argparser.get<std::string>("datadir");
 
     const std::string title = "Nerves of Steel Remake " + std::string(" (v") + std::string(VERSION) + ")";
+
+    if (!scale) {
+        LaunchOptions launch_options(title, &scale, &disable_music_playback);
+        if (!launch_options.run())
+            exit(0);
+    }
 
     if (datadir.size() == 0) {
         // Guess the path from location of NOS.BAT
