@@ -21,8 +21,7 @@ Fnt::Fnt(const std::string &filename) : filename(filename), width(0), height(0) 
 
     name = std::string(name_data.data(), name_data.size());
 
-    std::cerr << (int) height << " " << (int)width << " " << char_count << " " << name << "\n";
-
+    // There is a bug in file data
     if (height == 9)
         height = 5;
 
@@ -31,7 +30,6 @@ Fnt::Fnt(const std::string &filename) : filename(filename), width(0), height(0) 
         char chr = 1;
 
         fh.read((char *)&chr, 1);
-        std::cerr << i << " " << chr << "\n";
 
         for (int j = 0; j < height*width; j++) {
             uint8_t b;

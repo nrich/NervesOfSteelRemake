@@ -142,8 +142,6 @@ Map::Map(const std::string &filename) : filename(filename), x(0), y(0), width(0)
         height = std::max(height, std::max(map_segment.y1, map_segment.y2));
     }
 
-    std::cerr << sizeof(map_segment) << " " << fh.tellg() << "\n";
-
     for (uint32_t i = 0; i < texture_count; i += 1) {
         std::array<char, 24> texture_name_data;
 
@@ -153,7 +151,7 @@ Map::Map(const std::string &filename) : filename(filename), x(0), y(0), width(0)
 
         auto texture_name = "NOS/ENGINE/" + std::string(texture_name_data.data());
 
-        std::cerr << "Texture " << i << " " << texture_name << "\n";
+        //std::cerr << "Texture " << i << " " << texture_name << "\n";
 
         auto texture = TextureCache::LoadPot(texture_name);
 
